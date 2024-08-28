@@ -1,0 +1,90 @@
+folder banaim
+env install and activate
+Django install inside env
+project folder banaim- django-admin startproject newproject
+
+AllAuth install garim- pip install django-allauth
+
+settings.py ma create  garim
+AUTHENTICATION_BACKENDS=[
+    'django.contrib.auth.backends.ModelBackend'
+]
+
+settings.py ko installed_apps ma add garim:
+INSTALLED_APPS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+settings.py kai midlleware ma add garim naya midlleware(last ko):
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.midlleware.AccountMiddleware'			//this one
+]
+
+settings.py ma yo pani create gara:
+
+SOCIALACCOUNT_PROVIDERS={}
+
+EMAIL_BACKEND= 'django.core.mail.backends.console.EmailBackend'
+
+
+urls.py ma "include" add gara "path" pachi then
+urlpatterns ma add gara new path
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('accounts/',include('allauth.urls')),			//(this one)
+]
+
+
+// NOw MIgrate
+
+settings.py ma yo add garim:
+
+ACCOUNT_AUTHENTICATION_METHOD='email'
+ACCOUNT_EMAIL_REQUIRED=True
+
+tyaha server ma gayera signup garim ani cmd ma aayeko confirmation link bata user email lai confirm garim
+
+main folder vitrai new app create garim:
+ syntax- python manage.py startapp dashboard
+
+
+installed apps ma 'dashboard' add garim
+
+INSTALLED_APPS = [
+    'dashboard',
+
+updated views creating new function as follow:
+def profile(request):
+    return render(request,'profile.html')
+
+
+Updated urls.py by importing views from dashboard and adding path
+from django.contrib import admin
+from django.urls import path,include
+from dashboard import views		//added this
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('accounts/',include('allauth.urls')),
+    path('accounts/profile/',views.profile,name="profile") 	//added this
+]
+
+
+
+
+created templates folder with profile.html
+<h1>Logged in as: {{request.user.username}}</h1>
+<a href="{% url 'account_logout' %}">Logout</a>
+
+
+// **runserver**
+
